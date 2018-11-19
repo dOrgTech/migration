@@ -54,7 +54,7 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 	);
 
 	const [orgName, tokenName, tokenSymbol, founderAddresses, tokenDist, repDist, uController, cap] = [
-		'Genesis Test',
+		web3.utils.asciiToHex('Genesis Test'),
 		'Genesis Test',
 		'GDT',
 		migrationParams.founders.map(({ address }) => address),
@@ -79,8 +79,14 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 	tx = await forgeOrg.send();
 	await logTx(tx, 'Created new organization.');
 
+	const avatar = new web3.eth.Contract(require('@daostack/arc/build/contracts/Avatar.json').abi, Avatar, opts);
+
+	const NativeToken = await avatar.methods.nativeToken().call();
+	const NativeReputation = await avatar.methods.nativeReputation().call();
+
 	spinner.start('Setting AbsoluteVote parameters...');
 	const absoluteVoteSetParams = absoluteVote.methods.setParameters(
+		NativeReputation,
 		migrationParams.AbsoluteVote.votePerc,
 		migrationParams.AbsoluteVote.ownerVote
 	);
@@ -114,25 +120,22 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 	await logTx(tx, 'UpgradeScheme parameters set.');
 
 	spinner.start('Setting GenesisProtocol parameters...');
-	const genesisProtocolSetParams = genesisProtocol.methods.setParameters(
-		[
-			migrationParams.GenesisProtocol.preBoostedVoteRequiredPercentage,
-			migrationParams.GenesisProtocol.preBoostedVotePeriodLimit,
-			migrationParams.GenesisProtocol.boostedVotePeriodLimit,
-			web3.utils.toWei(migrationParams.GenesisProtocol.thresholdConstAGWei.toString(), 'gwei'),
-			migrationParams.GenesisProtocol.thresholdConstB,
-			web3.utils.toWei(migrationParams.GenesisProtocol.minimumStakingFeeGWei.toString(), 'gwei'),
-			migrationParams.GenesisProtocol.quietEndingPeriod,
-			migrationParams.GenesisProtocol.proposingRepRewardConstA,
-			migrationParams.GenesisProtocol.proposingRepRewardConstB,
-			migrationParams.GenesisProtocol.stakerFeeRatioForVoters,
-			migrationParams.GenesisProtocol.votersReputationLossRatio,
-			migrationParams.GenesisProtocol.votersGainRepRatioFromLostRep,
-			migrationParams.GenesisProtocol.daoBountyConst,
-			web3.utils.toWei(migrationParams.GenesisProtocol.daoBountyLimitGWei.toString(), 'gwei'),
-		],
-		migrationParams.GenesisProtocol.voteOnBehalf
-	);
+	const genesisProtocolSetParams = genesisProtocol.methods.setParameters([
+		migrationParams.GenesisProtocol.preBoostedVoteRequiredPercentage,
+		migrationParams.GenesisProtocol.preBoostedVotePeriodLimit,
+		migrationParams.GenesisProtocol.boostedVotePeriodLimit,
+		web3.utils.toWei(migrationParams.GenesisProtocol.thresholdConstAGWei.toString(), 'gwei'),
+		migrationParams.GenesisProtocol.thresholdConstB,
+		web3.utils.toWei(migrationParams.GenesisProtocol.minimumStakingFeeGWei.toString(), 'gwei'),
+		migrationParams.GenesisProtocol.quietEndingPeriod,
+		migrationParams.GenesisProtocol.proposingRepRewardConstA,
+		migrationParams.GenesisProtocol.proposingRepRewardConstB,
+		migrationParams.GenesisProtocol.stakerFeeRatioForVoters,
+		migrationParams.GenesisProtocol.votersReputationLossRatio,
+		migrationParams.GenesisProtocol.votersGainRepRatioFromLostRep,
+		migrationParams.GenesisProtocol.daoBountyConst,
+		web3.utils.toWei(migrationParams.GenesisProtocol.daoBountyLimitGWei.toString(), 'gwei'),
+	]);
 	const genesisProtocolParams = await genesisProtocolSetParams.call();
 	tx = await genesisProtocolSetParams.send();
 	await logTx(tx, 'GenesisProtocol parameters set.');
@@ -164,11 +167,6 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 	spinner.start('Setting DAO schemes...');
 	tx = await daoCreator.methods.setSchemes(Avatar, schemes, params, permissions).send();
 	await logTx(tx, 'DAO schemes set.');
-
-	const avatar = new web3.eth.Contract(require('@daostack/arc/build/contracts/Avatar.json').abi, Avatar, opts);
-
-	const NativeToken = await avatar.methods.nativeToken().call();
-	const NativeReputation = await avatar.methods.nativeReputation().call();
 
 	return {
 		dao: {
