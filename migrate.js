@@ -76,6 +76,11 @@ const wrapCommand = fn => async options => {
 	spinner.info(`Balance: \t${web3.utils.fromWei(balance)}ETH`);
 	spinner.info(`Gas price: \t${gasPrice}GWei`);
 
+	if (web3.utils.fromWei(balance).toString() === '0') {
+		spinner.fail(`Account balance is 0ETH.`);
+		process.exit(2);
+	}
+
 	// default opts for web3
 	const block = await web3.eth.getBlock('latest');
 	const opts = {
