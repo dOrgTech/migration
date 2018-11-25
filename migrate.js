@@ -9,14 +9,14 @@ const HDWallet = require('hdwallet-accounts');
 const moment = require('moment');
 const migrateBase = require('./migrate-base');
 const migrateDAO = require('./migrate-dao');
+const migrateMockScenario = require('./migrate-mock-scenario');
 
 async function migrate(opts) {
-	const base = await migrateBase(opts);
-	const dao = await migrateDAO({ ...opts, previousMigration: { ...opts.previousMigration, ...base } });
-	return {
-		...base,
-		...dao,
-	};
+	let migration = opts.previousMigration;
+	migration = { ...migration, ...(await migrateBase(opts)) };
+	migration = { ...migration, ...(await migrateDAO({ ...opts, previousMigration: migration })) };
+	migration = { ...migration, ...(await migrateMockScenario({ ...opts, previousMigration: migration })) };
+	return migration;
 }
 
 const defaults = {
@@ -188,6 +188,7 @@ function cli() {
 		.command('$0', 'Migrate base contracts and an example DAO', yargs => yargs, wrapCommand(migrate))
 		.command('base', 'Migrate an example DAO', yargs => yargs, wrapCommand(migrateBase))
 		.command('dao', 'Migrate base contracts', yargs => yargs, wrapCommand(migrateDAO))
+		.command('mock-scenario', 'Migrate mock scenario', yargs => yargs, wrapCommand(migrateMockScenario))
 		.showHelpOnFail(false)
 		.completion()
 		.wrap(120)
@@ -202,6 +203,7 @@ if (require.main == module) {
 		migrate: wrapCommand(migrate),
 		migrateBase: wrapCommand(migrateBase),
 		migrateDAO: wrapCommand(migrateDAO),
+		migrateMockScenario: wrapCommand(migrateMockScenario),
 		cli,
 	};
 }

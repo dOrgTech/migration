@@ -16,9 +16,8 @@ Migration is seperated into two phases:
 
 #### Versioning
 
-Both the npm package and the docker image are versioned according to the `@daostack/arc` package and the migration
-version. Example: `@daostack/arc@<arc version>` -> npm: `@daostack/ganache@<arcversion>-v<migration version>` and
-dockerhub: `daostack/ganache:X.Y.Z-v<migration version>`
+Both the npm package and the docker image are versioned according to the `@daostack/arc` package as the major version.
+Example: `@daostack/migration@56.3.4` -> uses `@daostack/arc@0.0.0-alpha.56`.
 
 ## Usage
 

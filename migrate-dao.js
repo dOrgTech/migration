@@ -13,6 +13,7 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 	let tx;
 
 	const {
+		DAOToken,
 		UController,
 		DaoCreator,
 		SchemeRegistrar,
@@ -28,6 +29,7 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 		DaoCreator,
 		opts
 	);
+	const daoToken = new web3.eth.Contract(require('@daostack/arc/build/contracts/DAOToken.json').abi, DAOToken, opts);
 	const schemeRegistrar = new web3.eth.Contract(
 		require('@daostack/arc/build/contracts/SchemeRegistrar.json').abi,
 		SchemeRegistrar,
@@ -59,6 +61,11 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 		opts
 	);
 
+	migrationParams.founders = migrationParams.founders.map(x => ({
+		...x,
+		address: x.privateKey ? web3.eth.accounts.privateKeyToAccount(x.privateKey).address : x.address,
+	}));
+
 	const [orgName, tokenName, tokenSymbol, founderAddresses, tokenDist, repDist, uController, cap] = [
 		'Genesis Test',
 		'Genesis Test',
@@ -69,6 +76,29 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 		UController,
 		'0',
 	];
+
+	for (let i = 0; i < migrationParams.founders.length; i++) {
+		const { address, eth, gen } = migrationParams.founders[i];
+		spinner.start(`Sending ${eth}ETH to ${address}`);
+		const ethTx = await web3.eth.sendTransaction({
+			...opts,
+			to: address,
+			value: web3.utils.toWei(eth.toString(), 'ether'),
+		});
+		logTx(ethTx, `Sent ${eth}ETH to ${address}`);
+
+		spinner.start(`Minting ${gen}GEN to ${address}`);
+		const genTx = await daoToken.methods.mint(address, web3.utils.toWei(gen.toString(), 'ether')).send();
+		logTx(genTx, `Minted ${gen}GEN to ${address}`);
+
+		//update founder eth and gen balance
+		migrationParams.founders[i].eth = Number(
+			web3.utils.fromWei((await web3.eth.getBalance(address)).toString(), 'ether')
+		);
+		migrationParams.founders[i].gen = Number(
+			web3.utils.fromWei((await daoToken.methods.balanceOf(address).call()).toString(), 'ether')
+		);
+	}
 
 	spinner.start('Creating a new organization...');
 	const forgeOrg = daoCreator.methods.forgeOrg(
@@ -84,6 +114,20 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 	const Avatar = await forgeOrg.call();
 	tx = await forgeOrg.send();
 	await logTx(tx, 'Created new organization.');
+
+	spinner.start(`Sending ${migrationParams.DAOEthBalance}ETH to new DAO`);
+	const daoEthTx = await web3.eth.sendTransaction({
+		...opts,
+		to: Avatar,
+		value: web3.utils.toWei(migrationParams.DAOEthBalance.toString(), 'ether'),
+	});
+	logTx(daoEthTx, `Sent ${migrationParams.DAOEthBalance}ETH to new DAO`);
+
+	spinner.start(`Minting ${migrationParams.DAOGENBalance}GEN to new DAO`);
+	const genTx = await daoToken.methods
+		.mint(Avatar, web3.utils.toWei(migrationParams.DAOGENBalance.toString(), 'ether'))
+		.send();
+	logTx(genTx, `Minted ${migrationParams.DAOGENBalance}GEN to new DAO`);
 
 	spinner.start('Setting AbsoluteVote parameters...');
 	const absoluteVoteSetParams = absoluteVote.methods.setParameters(
@@ -175,6 +219,8 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 
 	const NativeToken = await avatar.methods.nativeToken().call();
 	const NativeReputation = await avatar.methods.nativeReputation().call();
+	const avatarEth = web3.utils.fromWei(await web3.eth.getBalance(Avatar), 'ether');
+	const avatarGEN = web3.utils.fromWei(await daoToken.methods.balanceOf(Avatar).call(), 'ether');
 
 	return {
 		dao: {
@@ -182,6 +228,9 @@ async function migrateDAO({ web3, spinner, confirm, opts, migrationParams, logTx
 			Avatar,
 			NativeToken,
 			NativeReputation,
+			founders: migrationParams.founders,
+			eth: Number(avatarEth),
+			gen: Number(avatarGEN),
 		},
 	};
 }

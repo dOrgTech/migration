@@ -23,34 +23,66 @@
       "name": "Genesis Test",
       "Avatar": "0xcB4e66eCA663FDB61818d52A152601cA6aFEf74F",
       "NativeToken": "0x79183957Be84C0F4dA451E534d5bA5BA3FB9c696",
-      "NativeReputation": "0x0d370B0974454D7b0E0E3b4512c0735A6489A71A"
-    }
-  },
-  "kovan": {
-    "base": {
-      "DAOToken": "0xB0766E7B45dCb071021A17472475fC39C1E51Bb6",
-      "ControllerCreator": "0x27CB603aBe320D5909B1ca5A6D957127cc4A9AD1",
-      "DaoCreator": "0xbfaF00C7F7f378eF403dcEaD20802276Ca12d6f7",
-      "UController": "0xAc128f2Bd84DB02E4fB21A2daF845cC5AbE2A953",
-      "GenesisProtocol": "0x1EAe25B09604b3a9435521f3d8F8371AEb8B0c4e",
-      "SchemeRegistrar": "0x347a0184B81f324f9C0ED3370eFBEF88A8A57BdF",
-      "UpgradeScheme": "0xD1C5719abff2B10c6F452706cB5Cd6284D29D6D8",
-      "GlobalConstraintRegistrar": "0xdde4D88069E29C19d3AcB97b30Da2Df831E74D7a",
-      "ContributionReward": "0x4E053CD45879373de6abF40d638A33080fCB94a9",
-      "AbsoluteVote": "0xD2f4Eb916F27C899AE08E32832ee018302aaE4c2",
-      "QuorumVote": "0xE758F1b60552C6085c9D7650d5F9f6527e2814A4",
-      "SimpleICO": "0xb362eba9348A60Fa2A0e1eecfB33F2aA87aBC57E",
-      "TokenCapGC": "0x56155A9Fab7BAece74A2f4f33FBa219278034a72",
-      "VestingScheme": "0x03a5FD3135d6c46130e5Eb666475eA9C2c891B99",
-      "VoteInOrganizationScheme": "0xC641820c19Bd836ACfE1412d8C4E6D9D6843287c",
-      "OrganizationRegister": "0x8625EabCE5F7015Aa423Cc9fc31d3a98216A04EC",
-      "Redeemer": "0xa521612c1ff0697e80DF367961B37b7568FfBf20"
+      "NativeReputation": "0x0d370B0974454D7b0E0E3b4512c0735A6489A71A",
+      "founders": [
+        {
+          "privateKey": "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d",
+          "tokens": 300,
+          "reputation": 1000,
+          "eth": 99.19650066,
+          "gen": 5,
+          "address": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+        },
+        {
+          "privateKey": "0x6cbed15c793ce57650b9877cf6fa156fbef513c4e6134f022a85b1ffdd59b2a1",
+          "tokens": 500,
+          "reputation": 300,
+          "eth": 100.2,
+          "gen": 30,
+          "address": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0"
+        },
+        {
+          "privateKey": "0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c",
+          "tokens": 1000,
+          "reputation": 800,
+          "eth": 100.2,
+          "gen": 10,
+          "address": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b"
+        }
+      ],
+      "eth": 0.2,
+      "gen": 10
     },
-    "dao": {
-      "name": "Genesis Test",
-      "Avatar": "0x8D086e1267A94309815C7a84149aA7B66650A8b6",
-      "NativeToken": "0x6fDa6C6E2bE8888B1A97EAE53960Cc275E6Ae13D",
-      "NativeReputation": "0xDf8c13E628E204e4D5C65DaC8bca3d0553D9B84f"
+    "scenario": {
+      "proposals": [
+        {
+          "reputation": 100,
+          "tokens": 10,
+          "eth": 0,
+          "externalTokens": 0,
+          "periodLength": 0,
+          "periods": 1,
+          "externalToken": "0x79183957Be84C0F4dA451E534d5bA5BA3FB9c696",
+          "beneficiary": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+          "proposer": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+          "proposalId": "0xc31f2952787d52a41a2b2afd8844c6e295f1bed932a3a433542d4c420965028e"
+        }
+      ],
+      "votes": [
+        {
+          "proposalId": "0xc31f2952787d52a41a2b2afd8844c6e295f1bed932a3a433542d4c420965028e",
+          "vote": "Yes",
+          "voter": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0"
+        }
+      ],
+      "stakes": [
+        {
+          "proposalId": "0xc31f2952787d52a41a2b2afd8844c6e295f1bed932a3a433542d4c420965028e",
+          "vote": "Yes",
+          "amount": 2,
+          "staker": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b"
+        }
+      ]
     }
   }
 }

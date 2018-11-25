@@ -43,6 +43,7 @@ async function migrateBase({ web3, spinner, confirm, opts, logTx, previousMigrat
 		'GEN',
 		web3.utils.toWei('100000000')
 	);
+
 	const ControllerCreator = await deploy(require('@daostack/arc/build/contracts/ControllerCreator.json'));
 
 	const DaoCreator = await deploy(
