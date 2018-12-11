@@ -26,5 +26,33 @@
       "NativeToken": "0x05678a3797bf8dC4dE0C6B0Fd13c3C455629E02f",
       "NativeReputation": "0x332280007303d5942dd60A945169b2b303320686"
     }
+  },
+  "kovan": {
+    "base": {
+      "Reputation": "0x1eC50ECedE754Ceb98007276a14906b81BDF151b",
+      "DAOToken": "0xb30dBBc27D43822a4e53AD9a6643234cbeE20c63",
+      "ControllerCreator": "0x1f6E0a3dCADBcd86E5dC5f7157b5802035CF59d1",
+      "DaoCreator": "0x3470af3AD6e93e7EB58e7b7B8f7F9C9277459c82",
+      "UController": "0x1ed2271e188104217588b1Ea0e9569174dC0E348",
+      "GenesisProtocol": "0xA96BC14085073c81b23169a6AaA2920056ac2f0d",
+      "SchemeRegistrar": "0xF7ea01aDEFdBA129aba46B6445E70B2d5a5e6314",
+      "UpgradeScheme": "0x33Ac64Fc3c23D1FaE4F448B127c4B1d1AaBE30e7",
+      "GlobalConstraintRegistrar": "0x7e1EC709a76837F621c2Bb707cC1e6Ed75E553B9",
+      "ContributionReward": "0xb4029FF04150CeB6BB585b6a7de2f8f01517d36f",
+      "AbsoluteVote": "0x0b8560095271c5D5264440dEAFF2c4eEd18ba180",
+      "QuorumVote": "0x0F6EC59798fF3a62f23519989eF73839c3459045",
+      "SimpleICO": "0xBf2f4893e6f92AA7e7C8148e1d69Ab84b0745993",
+      "TokenCapGC": "0xEF5Ad2447CEc2b498eAa9feDB884aaFFd1Db440a",
+      "VestingScheme": "0xD4BDE6CF3c4Ed1bddAA876eD581Ea01B7A992B42",
+      "VoteInOrganizationScheme": "0x6970bC683Da3253AC9d495197b7687A5b975b6dD",
+      "OrganizationRegister": "0x8D827390B8DbbFd166aa581B41B14366693aC598",
+      "Redeemer": "0xBEc459854017c478546c4E09A177E3F38ce92731"
+    },
+    "dao": {
+      "name": "Genesis Test",
+      "Avatar": "0x4Eb749eB7715bE1A9Df1eec867052EC1C298f0af",
+      "NativeToken": "0x51CFbd58F239C553C608cf43D842E9b2FdF220Bc",
+      "NativeReputation": "0xD5F774874d36Acef76f477BB07cB5c0016f4302D"
+    }
   }
 }
